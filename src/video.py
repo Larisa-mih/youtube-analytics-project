@@ -6,12 +6,12 @@ class Video:
     api_key: str = os.getenv("API_KEY")
 
     def __init__(self, video_id):
+        self.video_id = video_id
+        self.video_response = self.get_service().videos().list(
+            part='snippet,statistics,contentDetails,topicDetails',
+            id=self.video_id
+        ).execute()
         try:
-            self.video_id = video_id
-            self.video_response = self.get_service().videos().list(
-                part='snippet,statistics,contentDetails,topicDetails',
-                id=self.video_id
-            ).execute()
             self.video_title: str = self.video_response['items'][0]['snippet']['title']
             self.url = f"https://www.youtube.com/watch?v={self.video_response['items'][0]['id']}'"
             self.view_count: int = self.video_response['items'][0]['statistics']['viewCount']
